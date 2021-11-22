@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 
 namespace Estudos.Dapper.Api.Controllers
 {
@@ -11,17 +11,23 @@ namespace Estudos.Dapper.Api.Controllers
     [Route("api/v1/[controller]")]
     public class UsuariosController : ControllerBase
     {
-        private readonly ILogger<UsuariosController> _logger;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public UsuariosController(ILogger<UsuariosController> logger)
+        public UsuariosController(IUsuarioRepository usuarioRepository)
         {
-            _logger = logger;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> ObterTodosAsync()
         {
-            return Ok(await Task.FromResult(new { sucesso = true }));
+            return Ok(await _usuarioRepository.ObterTodosAsync());
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> ObterPorIdAsync(int id)
+        {
+            return Ok(await _usuarioRepository.ObterPorIdAsync(id));
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Estudos.Dapper.Api.Business.Models;
 
 namespace Estudos.Dapper.Api.Business.Interfaces.Repositories
 {
     public interface IUsuarioRepository
     {
-        public List<Usuario> ObterTodos();
-        public Usuario ObterPorId(int id);
-        public void Adicionar(Usuario usuario);
-        public void Atualizar(Usuario usuario);
-        public void Remover(int id);
+        public Task<List<Usuario>> ObterTodosAsync();
+        public Task<Usuario> ObterPorIdAsync(int id);
+      
     }
 }

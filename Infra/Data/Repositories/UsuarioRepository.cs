@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
 using Microsoft.Extensions.Configuration;
@@ -15,29 +18,19 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));
         }
 
-        public List<Usuario> ObterTodos()
+        public async Task<List<Usuario>> ObterTodosAsync()
         {
-            throw new System.NotImplementedException();
+            var lista = await _connection.QueryAsync<Usuario>("select * from usuarios");
+            return lista.ToList();
         }
 
-        public Usuario ObterPorId(int id)
+        public async Task<Usuario> ObterPorIdAsync(int id)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Adicionar(Usuario usuario)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Atualizar(Usuario usuario)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Remover(int id)
-        {
-            throw new System.NotImplementedException();
+            return await _connection
+                .QueryFirstAsync<Usuario>("select * from usuarios where id = @id", new
+                {
+                    id
+                });
         }
     }
 }
