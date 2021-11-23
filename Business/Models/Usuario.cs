@@ -9,6 +9,7 @@ namespace Estudos.Dapper.Api.Business.Models
         {
             DataCadastro = DateTimeOffset.Now;
         }
+
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }

@@ -15,6 +15,7 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly IDbConnection _connection;
+
         public UsuarioRepository(IConfiguration configuration)
         {
             _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));
@@ -30,16 +31,16 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
         {
             //o ultimo item é o tipo de retorno
             var lista = await _connection.QueryAsync<Usuario, Contato, Usuario>(
-                 UsuarioQueries.ObterPorId,
-                 //mapeia como os dados devem ser retornados
-                 (usuario, contato) =>
-                 {
-                     usuario.Contato = contato;
-                     return usuario;
-                 },
-                 new { id },
-                 splitOn: "id"
-                 );
+                UsuarioQueries.ObterPorId,
+                //mapeia como os dados devem ser retornados
+                (usuario, contato) =>
+                {
+                    usuario.Contato = contato;
+                    return usuario;
+                },
+                new { id },
+                splitOn: "id"
+            );
             return lista.FirstOrDefault();
         }
 
@@ -86,7 +87,7 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
                 transaction.Commit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 transaction.Rollback();
                 return false;

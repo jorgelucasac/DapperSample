@@ -5,7 +5,7 @@
         #region Select
 
         public static string ObterTodos => "select * from usuarios";
-       
+
         public static string ObterPorId => @"SELECT *
                 FROM Usuarios
                 LEFT JOIN Contatos ON Contatos.UsuarioId = Usuarios.Id
@@ -32,7 +32,7 @@
         public static string AtualizarUsuario => @"UPDATE Usuarios SET 
         Nome = @Nome, Email = @Email, Sexo = @Sexo, RG = @RG, CPF = @CPF, NomeMae = @NomeMae,
         SituacaoCadastro = @SituacaoCadastro, DataCadastro = @DataCadastro WHERE Id = @Id";
-       
+
         public static string AtualizarContato => @"UPDATE Contatos SET 
             Telefone = @Telefone, Celular = @Celular WHERE Id = @Id";
 

@@ -39,10 +39,7 @@ namespace Estudos.Dapper.Api.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> AtualizarAsync(int id, Usuario usuario)
         {
-            if (id != usuario.Id)
-            {
-                return BadRequest("Dados informados não conferem");
-            }
+            if (id != usuario.Id) return BadRequest("Dados informados não conferem");
 
             await _usuarioRepository.AtualizarAsync(usuario);
             return NoContent();
