@@ -34,9 +34,21 @@ namespace Estudos.Dapper.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AdicionarAsync(Usuario usuario)
         {
-            var id = await _usuarioRepository.Adicionar(usuario);
+            var id = await _usuarioRepository.AdicionarAsync(usuario);
             usuario.Id = id;
-            return CreatedAtAction("ObterPorId", new {id}, usuario);
+            return CreatedAtAction("ObterPorId", new { id }, usuario);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> AtualizarAsync(int id, Usuario usuario)
+        {
+            if (id != usuario.Id)
+            {
+                return BadRequest("Dados informados não conferem");
+            }
+
+            await _usuarioRepository.AtualizarAsync(usuario);
+            return NoContent();
         }
     }
 }

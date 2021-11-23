@@ -33,7 +33,7 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                 });
         }
 
-        public async Task<int> Adicionar(Usuario usuario)
+        public async Task<int> AdicionarAsync(Usuario usuario)
         {
             const string sql = @"INSERT INTO Usuarios
            (Nome
@@ -54,7 +54,13 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
            ,@SituacaoCadastro
            ,@DataCadastro); select cast(SCOPE_IDENTITY() as int)";
 
-            return  await _connection.QuerySingleAsync<int>(sql, usuario);
+            return await _connection.QuerySingleAsync<int>(sql, usuario);
+        }
+
+        public async Task<bool> AtualizarAsync(Usuario usuario)
+        {
+            const string sql = "UPDATE Usuarios SET Nome = @Nome, Email = @Email, Sexo = @Sexo, RG = @RG, CPF = @CPF, NomeMae = @NomeMae, SituacaoCadastro = @SituacaoCadastro, DataCadastro = @DataCadastro WHERE Id = @Id";
+            return (await _connection.ExecuteAsync(sql, usuario) > 0);
         }
 
         public void Dispose()
