@@ -5,6 +5,10 @@ namespace Estudos.Dapper.Api.Business.Models
 {
     public class Usuario
     {
+        public Usuario()
+        {
+            DataCadastro = DateTimeOffset.Now;
+        }
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }

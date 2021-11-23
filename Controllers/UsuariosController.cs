@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
+using Estudos.Dapper.Api.Business.Models;
 
 namespace Estudos.Dapper.Api.Controllers
 {
@@ -28,6 +29,14 @@ namespace Estudos.Dapper.Api.Controllers
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {
             return Ok(await _usuarioRepository.ObterPorIdAsync(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdicionarAsync(Usuario usuario)
+        {
+            var id = await _usuarioRepository.Adicionar(usuario);
+            usuario.Id = id;
+            return CreatedAtAction("ObterPorId", new {id}, usuario);
         }
     }
 }
