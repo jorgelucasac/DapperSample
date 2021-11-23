@@ -19,6 +19,11 @@
         VALUES (@Nome, @Email, @Sexo, @RG, @CPF, @NomeMae, @SituacaoCadastro, @DataCadastro);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
+        public static string AdicionarContato => @"INSERT INTO Contatos
+        (UsuarioId, Telefone, Celular) 
+        VALUES (@UsuarioId, @Telefone, @Celular);
+        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
         #endregion
 
         #region Update

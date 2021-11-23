@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -44,7 +45,33 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
         public async Task<int> AdicionarAsync(Usuario usuario)
         {
-            return await _connection.QuerySingleAsync<int>(UsuarioQueries.AdicionarUsuario, usuario);
+            _connection.Open();
+            using var transaction = _connection.BeginTransaction();
+
+            try
+            {
+                usuario.Id = await _connection.QuerySingleAsync<int>
+                    (UsuarioQueries.AdicionarUsuario, usuario, transaction);
+
+                if (usuario.Contato is not null)
+                {
+                    usuario.Contato.UsuarioId = usuario.Id;
+                    usuario.Contato.Id = await _connection.QuerySingleAsync<int>
+                        (UsuarioQueries.AdicionarContato, usuario.Contato, transaction);
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            return usuario.Id;
         }
 
         public async Task<bool> AtualizarAsync(Usuario usuario)
