@@ -26,11 +26,23 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
         public async Task<Usuario> ObterPorIdAsync(int id)
         {
-            return await _connection
-                .QuerySingleOrDefaultAsync<Usuario>("select * from usuarios where id = @id", new
-                {
-                    id
-                });
+            const string sql = @"SELECT *
+            FROM Usuarios
+            LEFT JOIN Contatos ON Contatos.UsuarioId = Usuarios.Id
+            WHERE Usuarios.Id = @id";
+            //o ultimo item é o tipo de retorno
+            var lista = await _connection.QueryAsync<Usuario, Contato, Usuario>(
+                 sql,
+                 //mapeia como os dados devem ser retornados
+                 (usuario, contato) =>
+                 {
+                     usuario.Contato = contato;
+                     return usuario;
+                 },
+                 new { id },
+                 splitOn:"id"
+                 );
+            return lista.FirstOrDefault();
         }
 
         public async Task<int> AdicionarAsync(Usuario usuario)
