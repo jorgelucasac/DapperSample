@@ -63,6 +63,12 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             return (await _connection.ExecuteAsync(sql, usuario) > 0);
         }
 
+        public async Task<bool> RemoverAsync(int id)
+        {
+            const string sql = "DELETE FROM Usuarios WHERE Id = @Id";
+            return await _connection.ExecuteAsync(sql, new { Id = id }) > 0;
+        }
+
         public void Dispose()
         {
             _connection?.Dispose();

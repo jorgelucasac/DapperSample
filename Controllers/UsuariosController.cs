@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
@@ -49,6 +46,13 @@ namespace Estudos.Dapper.Api.Controllers
 
             await _usuarioRepository.AtualizarAsync(usuario);
             return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> RemoverAsync(int id)
+        {
+            await _usuarioRepository.RemoverAsync(id);
+            return Ok();
         }
     }
 }

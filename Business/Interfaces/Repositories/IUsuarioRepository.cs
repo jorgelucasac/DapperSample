@@ -11,5 +11,6 @@ namespace Estudos.Dapper.Api.Business.Interfaces.Repositories
         public Task<Usuario> ObterPorIdAsync(int id);
         public Task<int> AdicionarAsync(Usuario usuario);
         public Task<bool> AtualizarAsync(Usuario usuario);
+        public Task<bool> RemoverAsync(int id);
     }
 }
