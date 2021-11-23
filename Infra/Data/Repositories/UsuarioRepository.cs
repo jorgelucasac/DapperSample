@@ -76,7 +76,28 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
         public async Task<bool> AtualizarAsync(Usuario usuario)
         {
-            return (await _connection.ExecuteAsync(UsuarioQueries.AtualizarUsuario, usuario) > 0);
+            _connection.Open();
+            using var transaction = _connection.BeginTransaction();
+            try
+            {
+                await _connection.ExecuteAsync(UsuarioQueries.AtualizarUsuario, usuario, transaction);
+                if (usuario.Contato is not null)
+                    await _connection.ExecuteAsync(UsuarioQueries.AtualizarContato, usuario.Contato, transaction);
+
+                transaction.Commit();
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                return false;
+            }
+
+            finally
+            {
+                _connection.Close();
+            }
+
+            return true;
         }
 
         public async Task<bool> RemoverAsync(int id)
