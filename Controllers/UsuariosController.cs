@@ -22,6 +22,12 @@ namespace Estudos.Dapper.Api.Controllers
             return Ok(await _usuarioRepository.ObterTodosAsync());
         }
 
+        [HttpGet("usuarios-completos")]
+        public async Task<IActionResult> ObterTodosCompletoAsync()
+        {
+            return Ok(await _usuarioRepository.ObterTodosCompletoAsync());
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> ObterPorIdAsync(int id)
         {

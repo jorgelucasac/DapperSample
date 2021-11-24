@@ -27,21 +27,31 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             return lista.ToList();
         }
 
+        public async Task<List<Usuario>> ObterTodosCompletoAsync()
+        {
+            var usuarios = new Dictionary<int, Usuario>();
+            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Usuario>(
+                UsuarioQueries.ObterTodosCompletos,
+                //executa uma vez para cada linha retornada
+                (usuario, contato, enderecoEntrega) =>
+                    MapearUsuarios(usuario, contato, enderecoEntrega, ref usuarios));
+
+            return usuarios.Values.ToList();
+        }
+
         public async Task<Usuario> ObterPorIdAsync(int id)
         {
+            var usuarios = new Dictionary<int, Usuario>();
             //o ultimo item é o tipo de retorno
-            var lista = await _connection.QueryAsync<Usuario, Contato, Usuario>(
+            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Usuario>(
                 UsuarioQueries.ObterPorId,
                 //mapeia como os dados devem ser retornados
-                (usuario, contato) =>
-                {
-                    usuario.Contato = contato;
-                    return usuario;
-                },
+                (usuario, contato, enderecoEntrega) =>
+                    MapearUsuarios(usuario, contato, enderecoEntrega, ref usuarios),
                 new { id },
                 splitOn: "id"
             );
-            return lista.FirstOrDefault();
+            return usuarios.Values.FirstOrDefault();
         }
 
         public async Task<int> AdicionarAsync(Usuario usuario)
@@ -109,6 +119,26 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
         public void Dispose()
         {
             _connection?.Dispose();
+        }
+
+        private Usuario MapearUsuarios(Usuario usuario, Contato contato, EnderecoEntrega enderecoEntrega, ref Dictionary<int, Usuario> usuarios)
+        {
+            var existe = usuarios.ContainsKey(usuario.Id);
+            if (existe && enderecoEntrega is null) return null;
+
+            if (existe)
+            {
+                usuarios[usuario.Id].EnderecosEntrega.Add(enderecoEntrega);
+            }
+            else
+            {
+                if (enderecoEntrega is not null)
+                    usuario.EnderecosEntrega.Add(enderecoEntrega);
+                usuario.Contato = contato;
+                usuarios.Add(usuario.Id, usuario);
+            }
+
+            return usuario;
         }
     }
 }

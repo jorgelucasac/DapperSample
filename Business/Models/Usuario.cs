@@ -8,6 +8,8 @@ namespace Estudos.Dapper.Api.Business.Models
         public Usuario()
         {
             DataCadastro = DateTimeOffset.Now;
+            EnderecosEntrega = new List<EnderecoEntrega>();
+            Departamentos = new List<Departamento>();
         }
 
         public int Id { get; set; }
