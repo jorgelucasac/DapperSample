@@ -71,15 +71,7 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                         (UsuarioQueries.AdicionarContato, usuario.Contato, transaction);
                 }
 
-                if (usuario.EnderecosEntrega != null && usuario.EnderecosEntrega.Any())
-                {
-                    foreach (var enderecoEntrega in usuario.EnderecosEntrega)
-                    {
-                        enderecoEntrega.UsuarioId = usuario.Id;
-                        enderecoEntrega.Id = await _connection.QuerySingleAsync<int>
-                            (UsuarioQueries.AdicionarEnderecoEntrega, enderecoEntrega, transaction);
-                    }
-                }
+                AdicionarEnderecoEntrega(usuario.EnderecosEntrega, usuario.Id, transaction);
 
                 transaction.Commit();
             }
@@ -104,6 +96,9 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                 await _connection.ExecuteAsync(UsuarioQueries.AtualizarUsuario, usuario, transaction);
                 if (usuario.Contato is not null)
                     await _connection.ExecuteAsync(UsuarioQueries.AtualizarContato, usuario.Contato, transaction);
+
+                await _connection.ExecuteAsync(UsuarioQueries.RemoverEnderecosEntrega, usuario, transaction);
+                AdicionarEnderecoEntrega(usuario.EnderecosEntrega, usuario.Id, transaction);
 
                 transaction.Commit();
             }
@@ -149,6 +144,17 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             }
 
             return usuario;
+        }
+
+        private void AdicionarEnderecoEntrega(ICollection<EnderecoEntrega> enderecosEntrega, int usuarioId, IDbTransaction transaction)
+        {
+            if (enderecosEntrega == null || enderecosEntrega.Count == 0) return;
+
+            foreach (var enderecoEntrega in enderecosEntrega)
+            {
+                enderecoEntrega.UsuarioId = usuarioId;
+                enderecoEntrega.Id = _connection.Query<int>(UsuarioQueries.AdicionarEnderecoEntrega, enderecoEntrega, transaction).Single();
+            }
         }
     }
 }
