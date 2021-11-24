@@ -22,10 +22,14 @@
         (Nome, Email, Sexo, RG, CPF, NomeMae, SituacaoCadastro, DataCadastro)
         VALUES (@Nome, @Email, @Sexo, @RG, @CPF, @NomeMae, @SituacaoCadastro, @DataCadastro);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
-
         public static string AdicionarContato => @"INSERT INTO Contatos
         (UsuarioId, Telefone, Celular) 
         VALUES (@UsuarioId, @Telefone, @Celular);
+        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+        public static string AdicionarEnderecoEntrega => @"INSERT INTO EnderecosEntrega
+        (UsuarioId, NomeEndereco, CEP, Estado, Cidade, Bairro, Endereco, Numero, Complemento) 
+        VALUES (@UsuarioId, @NomeEndereco, @CEP, @Estado, @Cidade, @Bairro, @Endereco, @Numero, @Complemento);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         #endregion

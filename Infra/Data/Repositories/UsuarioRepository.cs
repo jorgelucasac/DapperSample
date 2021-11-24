@@ -71,6 +71,16 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                         (UsuarioQueries.AdicionarContato, usuario.Contato, transaction);
                 }
 
+                if (usuario.EnderecosEntrega != null && usuario.EnderecosEntrega.Any())
+                {
+                    foreach (var enderecoEntrega in usuario.EnderecosEntrega)
+                    {
+                        enderecoEntrega.UsuarioId = usuario.Id;
+                        enderecoEntrega.Id = await _connection.QuerySingleAsync<int>
+                            (UsuarioQueries.AdicionarEnderecoEntrega, enderecoEntrega, transaction);
+                    }
+                }
+
                 transaction.Commit();
             }
             catch (Exception)
