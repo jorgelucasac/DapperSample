@@ -23,6 +23,7 @@ namespace Estudos.Dapper.Api
         {
             services.Configure<SqlConnectionExtension>(Configuration.GetSection("ConnectionStrings"));
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IContribUsuarioRepository, ContribUsuarioRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Dapper.Contrib.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace Estudos.Dapper.Api.Business.Models
 {
+    [Table("Usuarios")]
     public class Usuario : Entidade
     {
         public Usuario()
@@ -23,8 +25,13 @@ namespace Estudos.Dapper.Api.Business.Models
         // usado offSet para trabalhar com fuso horário
         public DateTimeOffset DataCadastro { get; set; }
 
+        [Write(false)]
         public Contato Contato { get; set; }
+
+        [Write(false)]
         public ICollection<EnderecoEntrega> EnderecosEntrega { get; set; }
+
+        [Write(false)]
         public ICollection<Departamento> Departamentos { get; set; }
     }
 }
