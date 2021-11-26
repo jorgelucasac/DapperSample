@@ -57,7 +57,10 @@
         #region Delete
 
         public static string RemoverUsuario => "DELETE FROM Usuarios WHERE Id = @Id";
+
         public static string RemoverEnderecosEntrega = "DELETE FROM EnderecosEntrega WHERE UsuarioId = @Id";
+
+        public static string RemoverDepartamento => "DELETE FROM UsuariosDepartamentos WHERE UsuarioId = @Id";
 
         #endregion Delete
     }

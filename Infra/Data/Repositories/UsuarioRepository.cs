@@ -100,7 +100,10 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                     await _connection.ExecuteAsync(UsuarioQueries.AtualizarContato, usuario.Contato, transaction);
 
                 await _connection.ExecuteAsync(UsuarioQueries.RemoverEnderecosEntrega, usuario, transaction);
-                AdicionarEnderecoEntregaAsync(usuario.EnderecosEntrega, usuario.Id, transaction);
+                await AdicionarEnderecoEntregaAsync(usuario.EnderecosEntrega, usuario.Id, transaction);
+
+                await _connection.ExecuteAsync(UsuarioQueries.RemoverDepartamento, usuario, transaction);
+                await AdicionarDepartamentosAsync(usuario.Departamentos, usuario.Id, transaction);
 
                 transaction.Commit();
             }
