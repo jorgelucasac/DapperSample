@@ -6,15 +6,18 @@
 
         public static string ObterTodos => "select * from usuarios";
 
-        public static string ObterTodosCompletos => @"select * from Usuarios u
-        left join Contatos c on c.UsuarioId = u.Id
-        left join EnderecosEntrega ee on ee.UsuarioId = u.Id";
+        public static string ObterTodosCompletos => @"SELECT U.*, C.*, EE.*, D.* FROM Usuarios as U
+        LEFT JOIN Contatos C ON C.UsuarioId = U.Id
+        LEFT JOIN EnderecosEntrega EE ON EE.UsuarioId = U.Id
+        LEFT JOIN UsuariosDepartamentos UD ON UD.UsuarioId = U.Id
+        LEFT JOIN Departamentos D ON UD.DepartamentoId = D.Id";
 
-        public static string ObterPorId => @"SELECT *
-                FROM Usuarios
-                LEFT JOIN Contatos ON Contatos.UsuarioId = Usuarios.Id
-                LEFT JOIN EnderecosEntrega ee on ee.UsuarioId = Usuarios.Id
-                WHERE Usuarios.Id = @id";
+        public static string ObterPorId => @"SELECT U.*, C.*, EE.*, D.* FROM Usuarios as U
+        LEFT JOIN Contatos C ON C.UsuarioId = U.Id
+        LEFT JOIN EnderecosEntrega EE ON EE.UsuarioId = U.Id
+        LEFT JOIN UsuariosDepartamentos UD ON UD.UsuarioId = U.Id
+        LEFT JOIN Departamentos D ON UD.DepartamentoId = D.Id
+        WHERE U.Id = @Id";
 
         #endregion Select
 

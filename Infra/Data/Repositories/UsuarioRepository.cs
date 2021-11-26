@@ -31,11 +31,11 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
         public async Task<List<Usuario>> ObterTodosCompletoAsync()
         {
             var usuarios = new Dictionary<int, Usuario>();
-            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Usuario>(
+            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Departamento, Usuario>(
                 UsuarioQueries.ObterTodosCompletos,
                 //executa uma vez para cada linha retornada
-                (usuario, contato, enderecoEntrega) =>
-                    MapearUsuarios(usuario, contato, enderecoEntrega, ref usuarios));
+                (usuario, contato, enderecoEntrega, departamento) =>
+                    MapearUsuarios(usuario, contato, enderecoEntrega, departamento, ref usuarios));
 
             return usuarios.Values.ToList();
         }
@@ -44,11 +44,11 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
         {
             var usuarios = new Dictionary<int, Usuario>();
             //o ultimo item é o tipo de retorno
-            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Usuario>(
+            await _connection.QueryAsync<Usuario, Contato, EnderecoEntrega, Departamento, Usuario>(
                 UsuarioQueries.ObterPorId,
                 //mapeia como os dados devem ser retornados
-                (usuario, contato, enderecoEntrega) =>
-                    MapearUsuarios(usuario, contato, enderecoEntrega, ref usuarios),
+                (usuario, contato, enderecoEntrega, departamento) =>
+                    MapearUsuarios(usuario, contato, enderecoEntrega, departamento, ref usuarios),
                 new { id },
                 splitOn: "id"
             );
@@ -126,22 +126,23 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             _connection?.Dispose();
         }
 
-        private Usuario MapearUsuarios(Usuario usuario, Contato contato, EnderecoEntrega enderecoEntrega, ref Dictionary<int, Usuario> usuarios)
+        private Usuario MapearUsuarios(Usuario usuario, Contato contato, EnderecoEntrega enderecoEntrega, Departamento departamento, ref Dictionary<int, Usuario> usuarios)
         {
             var existe = usuarios.ContainsKey(usuario.Id);
-            if (existe && enderecoEntrega is null) return null;
 
             if (existe)
-            {
-                usuarios[usuario.Id].EnderecosEntrega.Add(enderecoEntrega);
-            }
-            else
-            {
-                if (enderecoEntrega is not null)
-                    usuario.EnderecosEntrega.Add(enderecoEntrega);
-                usuario.Contato = contato;
+                usuario = usuarios[usuario.Id];
+
+            if (enderecoEntrega is not null && !usuario.EnderecosEntrega.Any(a => a.Id == enderecoEntrega.Id))
+                usuario.EnderecosEntrega.Add(enderecoEntrega);
+
+            if (departamento is not null && !usuario.Departamentos.Any(a => a.Id == departamento.Id))
+                usuario.Departamentos.Add(departamento);
+
+            usuario.Contato ??= contato;
+
+            if (!existe)
                 usuarios.Add(usuario.Id, usuario);
-            }
 
             return usuario;
         }
