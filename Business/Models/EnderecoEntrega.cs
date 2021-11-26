@@ -1,8 +1,7 @@
 ﻿namespace Estudos.Dapper.Api.Business.Models
 {
-    public class EnderecoEntrega
+    public class EnderecoEntrega : Entidade
     {
-        public int Id { get; set; }
         public int UsuarioId { get; set; }
         public string NomeEndereco { get; set; }
         public string CEP { get; set; }

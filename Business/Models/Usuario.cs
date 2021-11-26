@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Estudos.Dapper.Api.Business.Models
 {
-    public class Usuario
+    public class Usuario : Entidade
     {
         public Usuario()
         {
@@ -12,7 +12,6 @@ namespace Estudos.Dapper.Api.Business.Models
             Departamentos = new List<Departamento>();
         }
 
-        public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Sexo { get; set; }

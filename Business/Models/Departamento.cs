@@ -2,9 +2,8 @@
 
 namespace Estudos.Dapper.Api.Business.Models
 {
-    public class Departamento
+    public class Departamento : Entidade
     {
-        public int Id { get; set; }
         public string Nome { get; set; }
 
         public ICollection<Usuario> Usuarios { get; set; }

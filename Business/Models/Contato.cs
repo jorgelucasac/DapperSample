@@ -1,8 +1,7 @@
 ﻿namespace Estudos.Dapper.Api.Business.Models
 {
-    public class Contato
+    public class Contato : Entidade
     {
-        public int Id { get; set; }
         public int UsuarioId { get; set; }
         public string Telefone { get; set; }
         public string Celular { get; set; }
