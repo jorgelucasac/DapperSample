@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
 using Estudos.Dapper.Api.Extension;
 using Estudos.Dapper.Api.Infra.Data.Repositories.Queries;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Estudos.Dapper.Api.Infra.Data.Repositories
 {
@@ -108,7 +108,6 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                 transaction.Rollback();
                 return false;
             }
-
             finally
             {
                 _connection.Close();

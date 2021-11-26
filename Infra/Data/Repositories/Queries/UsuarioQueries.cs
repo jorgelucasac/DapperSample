@@ -5,16 +5,18 @@
         #region Select
 
         public static string ObterTodos => "select * from usuarios";
+
         public static string ObterTodosCompletos => @"select * from Usuarios u
         left join Contatos c on c.UsuarioId = u.Id
         left join EnderecosEntrega ee on ee.UsuarioId = u.Id";
+
         public static string ObterPorId => @"SELECT *
                 FROM Usuarios
                 LEFT JOIN Contatos ON Contatos.UsuarioId = Usuarios.Id
                 LEFT JOIN EnderecosEntrega ee on ee.UsuarioId = Usuarios.Id
                 WHERE Usuarios.Id = @id";
-        
-        #endregion
+
+        #endregion Select
 
         #region Insert
 
@@ -22,34 +24,35 @@
         (Nome, Email, Sexo, RG, CPF, NomeMae, SituacaoCadastro, DataCadastro)
         VALUES (@Nome, @Email, @Sexo, @RG, @CPF, @NomeMae, @SituacaoCadastro, @DataCadastro);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
         public static string AdicionarContato => @"INSERT INTO Contatos
-        (UsuarioId, Telefone, Celular) 
+        (UsuarioId, Telefone, Celular)
         VALUES (@UsuarioId, @Telefone, @Celular);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
         public static string AdicionarEnderecoEntrega => @"INSERT INTO EnderecosEntrega
-        (UsuarioId, NomeEndereco, CEP, Estado, Cidade, Bairro, Endereco, Numero, Complemento) 
+        (UsuarioId, NomeEndereco, CEP, Estado, Cidade, Bairro, Endereco, Numero, Complemento)
         VALUES (@UsuarioId, @NomeEndereco, @CEP, @Estado, @Cidade, @Bairro, @Endereco, @Numero, @Complemento);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
-        #endregion
+        #endregion Insert
 
         #region Update
 
-        public static string AtualizarUsuario => @"UPDATE Usuarios SET 
+        public static string AtualizarUsuario => @"UPDATE Usuarios SET
         Nome = @Nome, Email = @Email, Sexo = @Sexo, RG = @RG, CPF = @CPF, NomeMae = @NomeMae,
         SituacaoCadastro = @SituacaoCadastro, DataCadastro = @DataCadastro WHERE Id = @Id";
 
-        public static string AtualizarContato => @"UPDATE Contatos SET 
+        public static string AtualizarContato => @"UPDATE Contatos SET
             Telefone = @Telefone, Celular = @Celular WHERE Id = @Id";
 
-        #endregion
+        #endregion Update
 
         #region Delete
 
         public static string RemoverUsuario => "DELETE FROM Usuarios WHERE Id = @Id";
         public static string RemoverEnderecosEntrega = "DELETE FROM EnderecosEntrega WHERE UsuarioId = @Id";
 
-        #endregion
+        #endregion Delete
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Estudos.Dapper.Api.Business.Interfaces.Repositories;
+﻿using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Estudos.Dapper.Api.Controllers
 {
