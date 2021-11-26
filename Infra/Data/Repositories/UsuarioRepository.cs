@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using Dapper;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
+using Estudos.Dapper.Api.Extension;
 using Estudos.Dapper.Api.Infra.Data.Repositories.Queries;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Estudos.Dapper.Api.Infra.Data.Repositories
 {
@@ -16,9 +17,9 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
     {
         private readonly IDbConnection _connection;
 
-        public UsuarioRepository(IConfiguration configuration)
+        public UsuarioRepository(IOptions<SqlConnectionExtension> options)
         {
-            _connection = new SqlConnection(configuration.GetConnectionString("SqlConnection"));
+            _connection = new SqlConnection(options.Value.SqlConnectionString);
         }
 
         public async Task<List<Usuario>> ObterTodosAsync()

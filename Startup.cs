@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
+using Estudos.Dapper.Api.Extension;
 using Estudos.Dapper.Api.Infra.Data.Repositories;
 
 namespace Estudos.Dapper.Api
@@ -27,6 +28,9 @@ namespace Estudos.Dapper.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.Configure<SqlConnectionExtension>(Configuration.GetSection("ConnectionStrings"));
+
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             services.AddControllers();
