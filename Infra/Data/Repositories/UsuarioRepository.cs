@@ -72,7 +72,8 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                         (UsuarioQueries.AdicionarContato, usuario.Contato, transaction);
                 }
 
-                AdicionarEnderecoEntrega(usuario.EnderecosEntrega, usuario.Id, transaction);
+                await AdicionarEnderecoEntregaAsync(usuario.EnderecosEntrega, usuario.Id, transaction);
+                await AdicionarDepartamentosAsync(usuario.Departamentos, usuario.Id, transaction);
 
                 transaction.Commit();
             }
@@ -99,7 +100,7 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                     await _connection.ExecuteAsync(UsuarioQueries.AtualizarContato, usuario.Contato, transaction);
 
                 await _connection.ExecuteAsync(UsuarioQueries.RemoverEnderecosEntrega, usuario, transaction);
-                AdicionarEnderecoEntrega(usuario.EnderecosEntrega, usuario.Id, transaction);
+                AdicionarEnderecoEntregaAsync(usuario.EnderecosEntrega, usuario.Id, transaction);
 
                 transaction.Commit();
             }
@@ -128,33 +129,41 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
         private Usuario MapearUsuarios(Usuario usuario, Contato contato, EnderecoEntrega enderecoEntrega, Departamento departamento, ref Dictionary<int, Usuario> usuarios)
         {
-            var existe = usuarios.ContainsKey(usuario.Id);
-
-            if (existe)
+            if (usuarios.ContainsKey(usuario.Id))
+            {
                 usuario = usuarios[usuario.Id];
-
-            if (enderecoEntrega is not null && !usuario.EnderecosEntrega.Any(a => a.Id == enderecoEntrega.Id))
-                usuario.EnderecosEntrega.Add(enderecoEntrega);
-
-            if (departamento is not null && !usuario.Departamentos.Any(a => a.Id == departamento.Id))
-                usuario.Departamentos.Add(departamento);
-
-            usuario.Contato ??= contato;
-
-            if (!existe)
+            }
+            else
+            {
+                usuario.Contato = contato;
                 usuarios.Add(usuario.Id, usuario);
+            }
+
+            usuario.EnderecosEntrega.AdicionarSeNaoExiste(enderecoEntrega);
+            usuario.Departamentos.AdicionarSeNaoExiste(departamento);
 
             return usuario;
         }
 
-        private void AdicionarEnderecoEntrega(ICollection<EnderecoEntrega> enderecosEntrega, int usuarioId, IDbTransaction transaction)
+        private async Task AdicionarEnderecoEntregaAsync(ICollection<EnderecoEntrega> enderecosEntrega, int usuarioId, IDbTransaction transaction)
         {
-            if (enderecosEntrega == null || enderecosEntrega.Count == 0) return;
+            if (enderecosEntrega is null || enderecosEntrega.Count == 0) return;
 
             foreach (var enderecoEntrega in enderecosEntrega)
             {
                 enderecoEntrega.UsuarioId = usuarioId;
-                enderecoEntrega.Id = _connection.Query<int>(UsuarioQueries.AdicionarEnderecoEntrega, enderecoEntrega, transaction).Single();
+                enderecoEntrega.Id = await _connection.QuerySingleAsync<int>
+                    (UsuarioQueries.AdicionarEnderecoEntrega, enderecoEntrega, transaction);
+            }
+        }
+
+        private async Task AdicionarDepartamentosAsync(ICollection<Departamento> departamentos, int usuarioId, IDbTransaction transaction)
+        {
+            if (departamentos is null && departamentos.Count == 0) return;
+
+            foreach (var departamento in departamentos)
+            {
+                await _connection.ExecuteAsync(UsuarioQueries.AdicionarDepartamentos, new { UsuarioId = usuarioId, DepartamentoId = departamento.Id }, transaction);
             }
         }
     }

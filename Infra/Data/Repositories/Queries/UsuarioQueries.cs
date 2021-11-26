@@ -38,6 +38,9 @@
         VALUES (@UsuarioId, @NomeEndereco, @CEP, @Estado, @Cidade, @Bairro, @Endereco, @Numero, @Complemento);
         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
+        public static string AdicionarDepartamentos => @"INSERT INTO UsuariosDepartamentos
+        (UsuarioId, DepartamentoId) VALUES (@UsuarioId, @DepartamentoId)";
+
         #endregion Insert
 
         #region Update
