@@ -44,6 +44,18 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
             return usuario;
         }
 
+        public Task<IEnumerable<Usuario>> StoredProcedureObterTodos()
+        {
+            return _connection.QueryAsync<Usuario>
+                ("SelecionarUsuarios", commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<Usuario> StoredProcedureObterPorIdAsync(int id)
+        {
+            return await _connection.QueryFirstOrDefaultAsync<Usuario>
+                ("SelecionarUsuario", new { Id = id }, commandType: CommandType.StoredProcedure);
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();

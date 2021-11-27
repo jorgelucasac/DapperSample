@@ -32,17 +32,17 @@ namespace Estudos.Dapper.Api.Controllers
         }
 
         [HttpGet("stored/usuarios")]
-        public IActionResult StoredGet()
+        public async Task<IActionResult> StoredGetAsync()
         {
-            var usuarios = _connection.Query<Usuario>("SelecionarUsuarios", commandType: CommandType.StoredProcedure);
+            var usuarios = await _dicaRepository.StoredProcedureObterTodos();
 
             return Ok(usuarios);
         }
 
         [HttpGet("stored/usuarios/{id}")]
-        public IActionResult StoredGet(int id)
+        public async Task<IActionResult> StoredGetAsync(int id)
         {
-            var usuarios = _connection.Query<Usuario>("SelecionarUsuario", new { Id = id }, commandType: CommandType.StoredProcedure);
+            var usuarios = await _dicaRepository.StoredProcedureObterPorIdAsync(id);
 
             return Ok(usuarios);
         }
