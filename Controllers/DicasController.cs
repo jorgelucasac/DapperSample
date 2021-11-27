@@ -1,12 +1,6 @@
-﻿using Dapper;
-using Estudos.Dapper.Api.Business.Interfaces.Repositories;
+﻿using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
-using Estudos.Dapper.Api.Extension;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Estudos.Dapper.Api.Controllers
@@ -51,6 +45,13 @@ namespace Estudos.Dapper.Api.Controllers
         public async Task<IActionResult> MapperUsandoSqlAsync()
         {
             var usuarios = await _dicaRepository.MapperUsandoSqlAsync();
+            return Ok(usuarios);
+        }
+
+        [HttpGet("mapper-usando-sql-fluent")]
+        public async Task<IActionResult> MapperUsandoFluentAsync()
+        {
+            var usuarios = await _dicaRepository.MapperUsandoConfigAsync();
             return Ok(usuarios);
         }
     }

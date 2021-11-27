@@ -1,5 +1,7 @@
+using Dapper.FluentMap;
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Extension;
+using Estudos.Dapper.Api.Infra.Data.DapperMapper;
 using Estudos.Dapper.Api.Infra.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +27,11 @@ namespace Estudos.Dapper.Api
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IContribUsuarioRepository, ContribUsuarioRepository>();
             services.AddScoped<IDicaRepository, DicaRepository>();
+
+            FluentMapper.Initialize(config =>
+            {
+                config.AddMap(new UsuarioCamposDiferentesMapper());
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

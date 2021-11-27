@@ -14,10 +14,17 @@ namespace Estudos.Dapper.Api.Business.Interfaces.Repositories
         public Task<Usuario> StoredProcedureObterPorIdAsync(int id);
 
         /// <summary>
-        /// Prblema: Mapear colunas com nomes diferentes das propriedades do objeto.
+        /// Problema: Mapear colunas com nomes diferentes das propriedades do objeto.
         /// Solução 01: SQL(ALIAS) Renomear a coluna.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="IList{UsuarioCamposDiferentes}"/></returns>
         public Task<IEnumerable<UsuarioCamposDiferentes>> MapperUsandoSqlAsync();
+
+        /// <summary>
+        /// Problema: Mapear colunas com nomes diferentes das propriedades do objeto.
+        /// Solução 01: SQL(ALIAS) Renomear a coluna.
+        /// </summary>
+        /// <returns><see cref="IList{UsuarioCamposDiferentes}"/></returns>
+        public Task<IEnumerable<UsuarioCamposDiferentes>> MapperUsandoConfigAsync();
     }
 }

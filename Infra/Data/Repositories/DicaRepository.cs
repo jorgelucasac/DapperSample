@@ -4,7 +4,6 @@ using Estudos.Dapper.Api.Business.Models;
 using Estudos.Dapper.Api.Extension;
 using Estudos.Dapper.Api.Infra.Data.Repositories.Queries;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -60,6 +59,11 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
         public async Task<IEnumerable<UsuarioCamposDiferentes>> MapperUsandoSqlAsync()
         {
             return await _connection.QueryAsync<UsuarioCamposDiferentes>(DicasQueries.SelectUsuarioComAlias);
+        }
+
+        public Task<IEnumerable<UsuarioCamposDiferentes>> MapperUsandoConfigAsync()
+        {
+            return _connection.QueryAsync<UsuarioCamposDiferentes>(DicasQueries.SelecionarTodosUsuarios);
         }
 
         public void Dispose()

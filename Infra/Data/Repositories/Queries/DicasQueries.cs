@@ -2,6 +2,8 @@
 {
     public class DicasQueries
     {
+        public static string SelecionarTodosUsuarios => "SELECT * FROM Usuarios;";
+
         public static string SelecionarUsuarioPorId => "SELECT * FROM Usuarios WHERE Id = @Id;";
 
         public static string SelecionarContatosPorUsuarioId => "SELECT * FROM Contatos WHERE UsuarioId = @Id;";
