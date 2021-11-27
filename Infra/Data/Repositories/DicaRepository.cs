@@ -2,6 +2,7 @@
 using Estudos.Dapper.Api.Business.Interfaces.Repositories;
 using Estudos.Dapper.Api.Business.Models;
 using Estudos.Dapper.Api.Extension;
+using Estudos.Dapper.Api.Infra.Data.Repositories.Queries;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,10 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
 
         public async Task<Usuario> ObterPorIdAsync(int id)
         {
-            string sql = "SELECT * FROM Usuarios WHERE Id = @Id;" +
-                            "SELECT * FROM Contatos WHERE UsuarioId = @Id;" +
-                            "SELECT * FROM EnderecosEntrega WHERE UsuarioId = @Id;" +
-                            "SELECT D.* FROM UsuariosDepartamentos UD INNER JOIN Departamentos D ON UD.DepartamentoId = D.Id WHERE UD.UsuarioId = @Id;";
+            string sql = DicasQueries.SelecionarUsuarioPorId +
+                         DicasQueries.SelecionarContatosPorUsuarioId +
+                         DicasQueries.SelecionarEnderecosEntregaPorUsuarioId +
+                         DicasQueries.SelecionarDepartamentosPorUsuarioId;
 
             using var multipleResultSets = await _connection.QueryMultipleAsync(sql, new { Id = id });
 
@@ -56,9 +57,14 @@ namespace Estudos.Dapper.Api.Infra.Data.Repositories
                 ("SelecionarUsuario", new { Id = id }, commandType: CommandType.StoredProcedure);
         }
 
+        public async Task<IEnumerable<UsuarioCamposDiferentes>> MapperUsandoSqlAsync()
+        {
+            return await _connection.QueryAsync<UsuarioCamposDiferentes>(DicasQueries.SelectUsuarioComAlias);
+        }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _connection?.Dispose();
         }
     }
 }

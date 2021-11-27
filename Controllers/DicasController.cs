@@ -46,5 +46,12 @@ namespace Estudos.Dapper.Api.Controllers
 
             return Ok(usuarios);
         }
+
+        [HttpGet("mapper-usando-sql-alias")]
+        public async Task<IActionResult> MapperUsandoSqlAsync()
+        {
+            var usuarios = await _dicaRepository.MapperUsandoSqlAsync();
+            return Ok(usuarios);
+        }
     }
 }
